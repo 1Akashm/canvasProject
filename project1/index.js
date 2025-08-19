@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     y: undefined,
   };
 
-  let maxRadius = 40;
+  let maxRadius = 20;
 
   // track the mouse event
   function trackMouse(e) {
@@ -17,11 +17,21 @@ document.addEventListener("DOMContentLoaded", function () {
     mouse.y = e.clientY;
   }
 
-  canvas.addEventListener("mousemove", trackMouse);
+  canvas.addEventListener("mouseenter", function (e) {
+    canvas.addEventListener("mousemove", trackMouse);
+    (mouse.x = undefined), (mouse.y = undefined);
+  });
 
   canvas.addEventListener("mouseleave", function (e) {
-    window.removeEventListener("mousemove", trackMouse);
+    canvas.removeEventListener("mousemove", trackMouse);
     (mouse.x = undefined), (mouse.y = undefined);
+  });
+
+  window.addEventListener("resize", function () {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    init();
   });
 
   function Circle(x, y, radius, dx, dy) {
@@ -68,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
         mouse.y - this.y > -50
       ) {
         if (this.radius < maxRadius) {
-          this.radius += 5;
+          this.radius += 1;
         }
       } else if (this.radius > 2) {
         this.radius -= 1;
@@ -78,15 +88,17 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   let circleArray = [];
+  function init() {
+    circleArray = [];
+    for (let i = 0; i < 2000; i++) {
+      let radius = Math.floor(Math.random() * 30) + 1;
+      let x = Math.random() * (window.innerWidth - radius * 2) + radius;
+      let dx = (Math.random() - 0.3) * 8;
+      let y = Math.random() * (window.innerHeight - radius * 2) + radius;
+      let dy = (Math.random() - 0.3) * 8;
 
-  for (let i = 0; i < 2000; i++) {
-    let radius = Math.floor(Math.random() * 30) + 1;
-    let x = Math.random() * (window.innerWidth - radius * 2) + radius;
-    let dx = (Math.random() - 0.3) * 8;
-    let y = Math.random() * (window.innerHeight - radius * 2) + radius;
-    let dy = (Math.random() - 0.3) * 8;
-
-    circleArray.push(new Circle(x, y, radius, dx, dy));
+      circleArray.push(new Circle(x, y, radius, dx, dy));
+    }
   }
 
   function animate() {
@@ -97,5 +109,6 @@ document.addEventListener("DOMContentLoaded", function () {
       circleArray[i].update();
     }
   }
+  init();
   animate();
 });
