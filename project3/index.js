@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   img.onload = function () {
     let canvas = document.querySelector("canvas");
-    canvas.width = 740;
-    canvas.height = 493;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
     let ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
